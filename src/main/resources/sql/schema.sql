@@ -1,0 +1,24 @@
+-- ⚠️ PLACEHOLDER - TO BE CREATED BY PERSON 1 (Phase 1: Database Setup & Connection)
+-- 
+-- Person 1's Tasks (Phase 1):
+-- 1. Create database in MySQL
+-- 2. Create employees table with proper schema
+--
+-- Expected SQL script:
+--
+-- CREATE DATABASE IF NOT EXISTS EmployeeDB;
+-- USE EmployeeDB;
+--
+-- CREATE TABLE IF NOT EXISTS employees (
+--     id BIGINT PRIMARY KEY AUTO_INCREMENT,
+--     first_name VARCHAR(100) NOT NULL,
+--     last_name VARCHAR(100) NOT NULL,
+--     email VARCHAR(255) NOT NULL UNIQUE
+-- );
+--
+-- After creating this script:
+-- 1. Run it in MySQL Workbench or MySQL command line
+-- 2. Uncomment spring.sql.init properties in application.properties
+-- 3. Replace this placeholder file with the actual SQL script
+
+-- TODO: Person 1 - Replace this file with actual CREATE DATABASE and CREATE TABLE statements
