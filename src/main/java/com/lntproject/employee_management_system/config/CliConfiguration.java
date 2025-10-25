@@ -32,6 +32,7 @@ public class CliConfiguration {
         @Override
         public Employee createEmployee(Employee employee) {
             Long requestedId = employee.getId();
+            @SuppressWarnings("UnnecessaryUnboxing")
             long id = requestedId != null ? requestedId.longValue() : idSequence.getAndIncrement();
             Employee persisted = copyOf(employee);
             persisted.setId(id);
