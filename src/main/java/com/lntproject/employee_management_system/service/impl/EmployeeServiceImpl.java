@@ -132,27 +132,41 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public Optional<Employee> updateEmployee(long id, Employee employee) {
+        // ✅ Step 1: Validate input before touching the database
+        if (employee == null) throw new IllegalArgumentException("Employee cannot be null");
+        if (id <= 0) throw new IllegalArgumentException("Invalid id");
+        if (employee.getFirstName() == null || employee.getFirstName().trim().isEmpty()) {
+            throw new IllegalArgumentException("firstName is required");
+        }
+        if (employee.getEmail() == null || employee.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("email is required");
+        }
+
+        // ✅ Step 2: Write the SQL query
         String sql = "UPDATE employees SET first_name = ?, last_name = ?, email = ? WHERE id = ?";
-        
+
+        // ✅ Step 3: Execute query
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             pstmt.setString(1, employee.getFirstName());
             pstmt.setString(2, employee.getLastName());
             pstmt.setString(3, employee.getEmail());
             pstmt.setLong(4, id);
-            
+
             int rowsAffected = pstmt.executeUpdate();
-            
+
+            // ✅ Step 4: If update successful, return updated employee
             if (rowsAffected > 0) {
                 employee.setId(id);
                 return Optional.of(employee);
             }
-            
+
         } catch (SQLException e) {
             throw new RuntimeException("Error updating employee: " + e.getMessage(), e);
         }
-        
+
+        // ✅ Step 5: If no record was updated, return empty
         return Optional.empty();
     }
 
@@ -161,18 +175,24 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public boolean deleteEmployee(long id) {
+        // Step 1: Validate input
+        if (id <= 0) {
+            throw new IllegalArgumentException("Invalid id");
+        }
+
         String sql = "DELETE FROM employees WHERE id = ?";
-        
+
+        // Step 2: Execute delete
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             pstmt.setLong(1, id);
-            
             int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
-            
+            return rowsAffected > 0; // true if deleted, false if id not found
+
         } catch (SQLException e) {
             throw new RuntimeException("Error deleting employee: " + e.getMessage(), e);
         }
     }
+
 }
