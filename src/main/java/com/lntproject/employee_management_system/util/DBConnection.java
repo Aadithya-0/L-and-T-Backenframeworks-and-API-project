@@ -1,70 +1,44 @@
 package com.lntproject.employee_management_system.util;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * ⚠️ PLACEHOLDER - TO BE IMPLEMENTED BY PERSON 1 (Phase 1: Database Setup & Connection)
- * 
- * This class should provide a static method to get database connections.
- * 
- * Person 1's Tasks:
- * 1. Create SQL script to create database and table
- * 2. Implement getConnection() method using DriverManager
- * 3. Handle ClassNotFoundException for JDBC driver
- * 4. Add a main() method to test the connection
- * 
- * Expected implementation:
- * - Use DriverManager.getConnection(URL, USER, PASSWORD)
- * - Handle ClassNotFoundException in a static block
- * - URL should be: jdbc:mysql://localhost:3306/EmployeeDB
- */
 public class DBConnection {
-
-    /**
-     * ⚠️ TO BE IMPLEMENTED BY PERSON 1
-     * 
-     * This method should:
-     * 1. Load MySQL JDBC Driver (Class.forName("com.mysql.cj.jdbc.Driver"))
-     * 2. Return DriverManager.getConnection(URL, USER, PASSWORD)
-     * 3. Throw SQLException if connection fails
-     * 
-     * @return Connection object to EmployeeDB database
-     * @throws SQLException if connection fails
-     */
-    public static Connection getConnection() throws SQLException {
-        // TODO: Person 1 - Implement this method
-        // Example:
-        // try {
-        //     Class.forName("com.mysql.cj.jdbc.Driver");
-        // } catch (ClassNotFoundException e) {
-        //     throw new SQLException("MySQL JDBC Driver not found", e);
-        // }
-        // return DriverManager.getConnection(
-        //     "jdbc:mysql://localhost:3306/EmployeeDB",
-        //     "root",
-        //     "password"
-        // );
-        
-        throw new UnsupportedOperationException(
-            "DBConnection.getConnection() not implemented yet. " +
-            "Person 1 (Phase 1) needs to implement this method."
-        );
+    
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/EmployeeDB";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "root123";
+    private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
+    
+    static {
+        try {
+            Class.forName(DRIVER_CLASS);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("MySQL JDBC Driver not found. Please ensure mysql-connector-j is in the classpath.", e);
+        }
     }
     
-    /**
-     * ⚠️ TO BE IMPLEMENTED BY PERSON 1
-     * 
-     * Add a main() method here to test the database connection.
-     * Should print "Connection Successful!" or handle SQLException.
-     */
-    // public static void main(String[] args) {
-    //     try {
-    //         Connection conn = getConnection();
-    //         System.out.println("Connection Successful!");
-    //         conn.close();
-    //     } catch (SQLException e) {
-    //         System.err.println("Connection failed: " + e.getMessage());
-    //     }
-    // }
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+    }
+    
+    public static void main(String[] args) {
+        try {
+            Connection conn = getConnection();
+            System.out.println("✅ Connection Successful!");
+            System.out.println("Database URL: " + DB_URL);
+            System.out.println("Connected to: " + conn.getMetaData().getDatabaseProductName() + 
+                             " " + conn.getMetaData().getDatabaseProductVersion());
+            conn.close();
+            System.out.println("Connection closed successfully.");
+        } catch (SQLException e) {
+            System.err.println("❌ Connection failed: " + e.getMessage());
+            System.err.println("Please check:");
+            System.err.println("1. MySQL server is running");
+            System.err.println("2. Database 'EmployeeDB' exists");
+            System.err.println("3. Username and password are correct");
+            System.err.println("4. MySQL connector dependency is included");
+        }
+    }
 }
